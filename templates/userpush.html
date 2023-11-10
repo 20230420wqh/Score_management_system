@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script> -->
+    <!-- <script src="//unpkg.com/element-ui@2.15.14/lib/index.js"></script> -->
+    <link rel="stylesheet" href="/static/el_button.css">
+    <link rel="stylesheet" href="/static/Program_required_style.css">
+    <!-- 引入样式 -->
+    <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+<!-- 引入组件库 -->
+    <!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+    <title>用户管理</title>
+    <!-- <script>
+        // 函数用于显示消息
+        function mess(content) {
+            var messageContainer = document.getElementById("messageContainer");
+            messageContainer.innerText = content;
+    
+            // 显示消息
+            messageContainer.style.display = "block";
+    
+            // 在3秒后隐藏消息
+            setTimeout(function () {
+                messageContainer.style.display = "none";
+            }, 3000); // 3秒
+        }
+    </script> -->
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            height: 100vh;
+            color: white;
+            padding-top: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 8px 16px;
+            text-align: center;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #555;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .container {
+            flex: 1;
+            padding: 20px;
+        }
+        .table-container {
+        overflow: auto;
+        max-height: 600px; /* 根据需要调整最大高度 */
+    }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: #333;
+        color: #fff;
+    }
+
+        table {
+            width: 100%; /* 确保表格占据其容器的100%宽度 */
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .leibiao {
+            color: #333;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #ff6666;
+        }
+
+        .container-content {
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .container h1 {
+            margin-bottom: 10px;
+        }
+
+        .container h2, .container p {
+            margin-bottom: 20px;
+        }
+
+        .container .el-button {
+            margin-right: 10px;
+        }
+
+        .footer {
+            text-align: right;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin: 0;
+            padding: 10px;
+            color: gray;
+        }
+        .del {
+            all: unset;
+          }
+          .container {
+          text-align: center;
+          margin: 0 auto; /* 通过设置左右外边距为auto来使元素水平居中 */
+          }
+        .graycolor{
+            color: gray;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="sidebar">
+        <ul>
+            <h1 class="container">功能</h1>
+            <li><a href="/home">首页</a></li>
+            <li><a href="/add">量化分加减</a></li>
+            <li><a href="/pulldate">导出</a></li>
+            <li><a href="#">成绩管理</a></li>
+            <li><a href="#">获奖管理</a></li>
+            <li><a href="/userpush">用户信息</a></li>
+            <li><a href="#">ip限制</a></li>
+            <li><a href="/applog">更新日志</a></li>
+            <li><a href="#">意见反馈</a></li>
+        </ul>
+    </div>
+    <div class="container">
+        <header>
+            <h1>用户管理</h1>
+        </header>
+        <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>密码</th>
+                    <th>功能</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user[0] }}</td>
+                    <td>{{ user[1] }}</td>
+                    <td>{{ user[2] }}</td>
+                    {% if user[0] in [1, 2, 3] %}
+                    <td><a class="leibiao delete-link protected-delete-link">删除</a></td>
+                    {% else %}
+                    <td><a class="leibiao delete-link" href="/delete/{{ user[0] }}" onclick="return confirm('你确定要删除吗？')">删除</a></td>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+        <p style="color: #ff6666;">你没有权限新增用户，请联系管理员新增,后缀有_ad的是管理员账户或者开头是Ad也是管理员账户，你没有权限删除</p>
+    </div>
+</body>
+<script>
+    // const userValue = "{{username}}"; // 这里替换为您实际的用户值
+    //         // 函数用于显示消息
+    //         function mess(content) {
+    //         var messageContainer = document.getElementById("messageContainer");
+    //         messageContainer.innerText = content;
+    
+    //         // 显示消息
+    //         messageContainer.style.display = "block";
+    
+    //         // 在3秒后隐藏消息
+    //         setTimeout(function () {
+    //             messageContainer.style.display = "none";
+    //         }, 3000); // 3秒
+    //     }
+    const userValue = "{{username}}"; // 替换为实际的用户名值
+
+    if (userValue !== "Administrator" && userValue !== "amy_ad" && userValue !== "wqh_ad") {
+        alert("你没有权限查看");
+        window.location.href = "/home";
+
+    }
+</script>
+
+<script>
+    const deleteLinksContainer = document.querySelector('.container');
+
+    deleteLinksContainer.addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete-link')) {
+            event.preventDefault();
+            const userDeleteConfirmation = confirm('你确定要删除吗？');
+            if (userDeleteConfirmation) {
+                window.location.href = event.target.href;
+            }
+        }
+    });
+</script>
+<script>
+    // const protectedDeleteLinks = document.querySelectorAll('.protected-delete-link');
+    //         // 函数用于显示消息
+    //         function mess(content) {
+    //         var messageContainer = document.getElementById("messageContainer");
+    //         messageContainer.innerText = content;
+    
+    //         // 显示消息
+    //         messageContainer.style.display = "block";
+    
+    //         // 在3秒后隐藏消息
+    //         setTimeout(function () {
+    //             messageContainer.style.display = "none";
+    //         }, 3000); // 3秒
+    //     }
+    protectedDeleteLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            // 弹出消息提示框，告知用户无法删除
+            //  alert('你无法删除此用户,你的权限不够');
+            // this.message(你无法删除管理员账户)
+            mess("对不起，你的权限不够，无法删除")
+        });
+    });
+</script>
+
+</html>

@@ -1,0 +1,127 @@
+.el-button {
+  /* 按钮的基本样式 */
+  /* 你可以在这里定义按钮的默认样式 */
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  white-space: nowrap;
+  background-color: #409eff;
+  border: 1px solid #dcdfe6;
+  color: #fff;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  padding: 12px 20px;
+  border-radius: 4px;
+}
+
+.el-button--default {
+  /* 默认按钮类型样式 */
+  background-color: #409eff;
+  border-color: #dcdfe6;
+  color: #fff;
+}
+
+.el-button--primary {
+  /* 主要按钮类型样式 */
+  background-color: #f56c6c;
+  border-color: #f56c6c;
+  color: #fff;
+}
+
+.el-button--success {
+  /* 成功按钮类型样式 */
+  background-color: #67c23a;
+  border-color: #67c23a;
+  color: #fff;
+}
+
+.el-button--info {
+  /* 信息按钮类型样式 */
+  background-color: #909399;
+  border-color: #909399;
+  color: #fff;
+}
+
+.el-button--warning {
+  /* 警告按钮类型样式 */
+  background-color: #e6a23c;
+  border-color: #e6a23c;
+  color: #fff;
+}
+
+.el-button--danger {
+  /* 危险按钮类型样式 */
+  background-color: #f56c6c;
+  border-color: #f56c6c;
+  color: #fff;
+}
+
+.el-button--small {
+  /* 小按钮样式 */
+  font-size: 12px;
+  padding: 10px 15px;
+}
+
+.el-button--large {
+  /* 大按钮样式 */
+  font-size: 16px;
+  padding: 14px 24px;
+}
+
+.is-disabled {
+  /* 禁用按钮样式 */
+  cursor: not-allowed;
+  background-color: #ebeef5;
+  border-color: #dcdfe6;
+  color: #c0c4cc;
+}
+
+.is-loading {
+  /* 加载中按钮样式 */
+  cursor: not-allowed;
+  background-color: #409eff;
+  border-color: #dcdfe6;
+  color: #fff;
+}
+
+.is-plain {
+  /* 平面按钮样式 */
+  background-color: #fff;
+  border-color: #dcdfe6;
+  color: #409eff;
+}
+
+.is-round {
+  /* 圆角按钮样式 */
+  border-radius: 20px;
+}
+
+.is-circle {
+  /* 圆形按钮样式 */
+  border-radius: 50%;
+}
+
+.el-icon-loading {
+  /* 加载中图标样式 */
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  border-top-color: #409eff;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+.container {
+  text-align: center;
+  margin: 0 auto; /* 通过设置左右外边距为auto来使元素水平居中 */
+                  }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

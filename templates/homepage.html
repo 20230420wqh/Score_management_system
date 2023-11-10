@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量化分首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/Program_required_style.css">
+    <link rel="stylesheet" href="/static/el_button.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <ul>
+            <h1 class="graycolor container">功能</h1>
+            <li><a href= "#"></a>首页</li>
+            <li><a href= "/add">量化分加减</a></li>
+            <li><a href="#">导出</a></li>
+            <li><a href="#">成绩管理</a></li>
+            <li><a href="#">获奖管理</a></li>
+            <li><a href="/userpush">用户信息</a></li>
+            <!-- <li><a href="/userpush">用户信息</a></li> -->
+            <li><a href="#">ip限制</a></li>
+            <li><a href="#">更新日志</a></li>
+            <li><a href="#">意见反馈 </a></li>
+        </ul>
+    </div>
+    <div class="container" >
+        <h1>欢迎来到量化分管理程序</h1>
+		<h2>这里可以计算，更改数据，输入后点击保存会自动同步<h2>
+        <p class="redcorlor">这里的所有操作会同步到数据库，并且会记录操作者的账号，请谨慎操作！</p>
+		<p class="footer">-----wqh工作室</p>
+        <div>
+            <form action="/goabout" method="POST">
+                <input class="el-button" type="submit" value="about wqh工作室">
+            </form>
+        </div>
+    </div>
+    <div>
+        <form action="/logout" method="POST">
+            <input class="el-button" type="submit" value="logout">
+        </form>
+    </div>
+</body>
+</html>
