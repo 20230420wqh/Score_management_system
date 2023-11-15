@@ -270,8 +270,8 @@ def detegrade():
 
 @app.route('/delgradepupil')
 @login_required
-def gitpupildel():
-    return 1
+def pushpupildel():
+    return redirect('/detelgrade')
 # @app.route('/newid')
 # def mewid():
 #     mydb._open_connection()

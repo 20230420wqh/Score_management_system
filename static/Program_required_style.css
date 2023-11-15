@@ -12,7 +12,16 @@
   padding: 10px; /* 添加内边距，使内容与边框有一些间距 */
   color: gray; /* 文字颜色为灰色 */
                 }
-        
+.footer2 {
+  text-align: right; /* 靠右对齐 */
+  position: absolute; /* 使用绝对定位 */
+  bottom: 0; /* 离底部的距离为0 */
+  right: 0; /* 离右边的距离为0 */
+  margin: 0; /* 去除默认的外边距 */
+  padding: 10px; /* 添加内边距，使内容与边框有一些间距 */
+  color: rgb(0, 0, 0); /* 文字颜色为灰色 */
+                }
+  
 body {
   font-family: Arial, sans-serif;
   margin: 0;
