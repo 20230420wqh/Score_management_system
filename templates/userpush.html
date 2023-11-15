@@ -174,6 +174,7 @@
             <li><a href="/pulldate">导出</a></li>
             <li><a href="#">成绩管理</a></li>
             <li><a href="#">获奖管理</a></li>
+            <li><a href="#">新建扣分</a></li>
             <li><a href="/userpush">用户信息</a></li>
             <li><a href="#">ip限制</a></li>
             <li><a href="/applog">更新日志</a></li>
@@ -201,7 +202,7 @@
                     <td>{{ user[1] }}</td>
                     <td>{{ user[2] }}</td>
                     {% if user[0] in [1, 2, 3] %}
-                    <td><a class="leibiao delete-link protected-delete-link">删除</a></td>
+                    <td><a class="leibiao delete-link protected-delete-link" onclick="deleteno()">删除</a></td>
                     {% else %}
                     <td><a class="leibiao delete-link" href="/delete/{{ user[0] }}" onclick="return confirm('你确定要删除吗？')">删除</a></td>
                 {% endif %}
@@ -264,15 +265,19 @@
     //             messageContainer.style.display = "none";
     //         }, 3000); // 3秒
     //     }
-    protectedDeleteLinks.forEach(link => {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
-            // 弹出消息提示框，告知用户无法删除
-            //  alert('你无法删除此用户,你的权限不够');
-            // this.message(你无法删除管理员账户)
-            mess("对不起，你的权限不够，无法删除")
-        });
-    });
+    // protectedDeleteLinks.forEach(link => {
+    //     link.addEventListener('click', function(event) {
+    //         event.preventDefault();
+    //         // 弹出消息提示框，告知用户无法删除
+    //          alert('你无法删除此用户,你的权限不够');
+    //         this.message(你无法删除管理员账户)
+    //         mess("对不起，你的权限不够，无法删除")
+    //     });
+    // });
+    function deleteno() {
+        // window.location.href = "/home";
+        alert("你无法删除此用户,你的权限不够");
+    }
 </script>
 
 </html>

@@ -22,6 +22,7 @@
             <li><a href="#">导出</a></li>
             <li><a href="#">成绩管理</a></li>
             <li><a href="#">获奖管理</a></li>
+            <li><a href="#">新建扣分</a></li>
             <li><a href="/userpush">用户信息</a></li>
             <!-- <li><a href="/userpush">用户信息</a></li> -->
             <li><a href="#">ip限制</a></li>
@@ -35,10 +36,13 @@
         <p class="redcorlor">这里的所有操作会同步到数据库，并且会记录操作者的账号，请谨慎操作！</p>
 		<p class="footer">-----wqh工作室</p>
         <div>
-            <form action="/goabout" method="POST">
+            <!-- <form action="/goabout" method="POST">
                 <input class="el-button" type="submit" value="about wqh工作室">
-            </form>
+            </form> -->
+            <button onclick="aboutwqh()" class="el-button">关于wqh团队工作室</button>
+            <button onclick="instructions()" class="el-button">使用说明</button>        
         </div>
+        #周三开发后续内容
     </div>
     <div>
         <form action="/logout" method="POST">
@@ -46,4 +50,14 @@
         </form>
     </div>
 </body>
+<script>
+    function aboutwqh() {
+        window.location.href = "/about";
+    }
+
+    function instructions() {
+        // window.location.href = "/home";
+        alert("程序员正在快马加鞭开发中ing");
+    }
+</script>
 </html>

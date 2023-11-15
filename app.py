@@ -218,13 +218,42 @@ def delete_user(user_id):
     if user_id == 1 or user_id == 2 or user_id ==3:
         redirect('/userpush')
     else:
-        mydb._open_connection()
+        # mydb._open_connection()
+        # # 执行删除用户的SQL语句
+        # delete_query = 'DELETE FROM user WHERE id = %s'
+        # cursor.nextset()
+        # cursor.execute(delete_query, (user_id,))
+        # # 提交事务
+        # mydb.commit()
+        # mydb.close()
+        # mydb._open_connection()
+        # # 执行重新排序的SQL语句
+        # reorder_query = 'SET @new_id := 0; UPDATE user SET id = @new_id := @new_id + 1 ORDER BY id;'
+        # cursor.nextset()
+        # cursor.execute(reorder_query)
+
+        # # 提交重新排序事务
+        # mydb.commit()
+        # mydb.close()
+        # 执行删除用户的SQL语句
+        mydb._open_connection()  # 打开数据库连接
+        cursor = mydb.cursor()  # 获取游标
+
         # 执行删除用户的SQL语句
         delete_query = 'DELETE FROM user WHERE id = %s'
         cursor.execute(delete_query, (user_id,))
         # 提交事务
         mydb.commit()
-        mydb.close()
+
+        # 执行重新排序的SQL语句
+        cursor.execute('SET @new_id := 0')
+        update_query = 'UPDATE user SET id = @new_id := @new_id + 1 ORDER BY id'
+        cursor.execute(update_query)
+        # 提交重新排序事务
+        mydb.commit()
+
+        mydb.close()  # 所有语句执行完成后再关闭数据库连接
+
     return redirect('/userpush')
 
 @app.route('/applog')
@@ -233,6 +262,30 @@ def applog():
     username = session.get('username')
     return render_template('applog.html',username = username)
     
+@app.route('/detelgrade')
+@login_required
+def detegrade():
+    username = session.get('username')
+    return render_template('delgrade.html',username = username)
+
+@app.route('/delgradepupil')
+@login_required
+def gitpupildel():
+    return 1
+# @app.route('/newid')
+# def mewid():
+#     mydb._open_connection()
+#     mysqlif()
+#     with mydb.cursor() as cursor:
+#             # 执行重新排序的SQL语句
+#             reorder_query = 'SET @new_id := 0; UPDATE user SET id = @new_id := @new_id + 1 ORDER BY id;'
+#             cursor.nextset()
+#             cursor.execute(reorder_query)
+
+#         # 提交重新排序事务
+#             mydb.commit()
+#     mydb.close()
+#     return redirect('/userpush')
 
 @app.route('/logout', methods=['POST'])
 def logout():
@@ -243,4 +296,5 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(port=5001,host='0.0.0.0')
+    app.run(port=5001)
+    # ,host='0.0.0.0'
