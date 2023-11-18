@@ -178,7 +178,35 @@ def index5():
 @login_required
 def index6():
     username = session.get('username')
-    return render_template('grade_add.html',username = username)
+        # mydb = mysql.connector.connect(
+    # host="47.115.200.81",
+    # user="root",
+    # password="wqh@2023",
+    # database="expression_generator",
+    # port = 3306
+    #     )
+    # if not mydb.is_connected():
+    #     mydb = mysql.connector.connect(
+    #     host="47.115.200.81",
+    #     user="root",
+    #     password="wqh@2023",
+    #     database="expression_generator",
+    #     port = 3306
+    #     )
+    #     print("连接成功（重新连接）")
+    # else:
+    #     print("连接成功")
+    username = session.get('username')
+    # if username != 'Administrator'or'amy_ad'or'wqh_ad':
+    #     return redirect('/home')
+    # else:
+    mydb._open_connection()
+    mysqlif()
+    cursor.execute("SELECT * FROM pupil")
+    users = cursor.fetchall()
+    mydb.close()
+    username = session.get('username')
+    return render_template('grade_add.html', users=users,username = username)
     #app.send_static_file这个是旧的路径
 @app.route('/userpush')
 @login_required
@@ -268,9 +296,10 @@ def detegrade():
     username = session.get('username')
     return render_template('delgrade.html',username = username)
 
-@app.route('/delgradepupil')
+@app.route('/delgradepupil', methods=['GET', 'POST'])
 @login_required
 def pushpupildel():
+
     return redirect('/detelgrade')
 # @app.route('/newid')
 # def mewid():
