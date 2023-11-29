@@ -8,6 +8,7 @@
     <!-- <script src="//unpkg.com/element-ui@2.15.14/lib/index.js"></script> -->
     <link rel="stylesheet" href="/static/el_button.css">
     <link rel="stylesheet" href="/static/Program_required_style.css">
+    <link rel="stylesheet" href="/static/el_button.css">
     <!-- 引入样式 -->
     <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
 <!-- 引入组件库 -->
@@ -168,6 +169,7 @@
 <body>
     <div class="sidebar">
         <ul>
+            <h2 class="container">{{username}}</h2>
             <h1 class="container">功能</h1>
             <li><a href="/home">首页</a></li>
             <li><a href="/add">量化分加减</a></li>
@@ -182,9 +184,14 @@
         </ul>
     </div>
     <div class="container">
+
         <header>
             <h1>用户管理</h1>
         </header>
+        <div>
+            <button class="el-button" onclick="newid()">更新id</button>
+            <button class="el-button" onclick="newlist()">刷新列表</button>
+        </div>
         <div class="table-container">
         <table>
             <thead>
@@ -277,6 +284,20 @@
     function deleteno() {
         // window.location.href = "/home";
         alert("你无法删除此用户,你的权限不够");
+    }
+    function newid() {
+        const userDeleteConfirmation = confirm('你确定要重排id吗？');
+            if (userDeleteConfirmation) {
+                window.location.href = "/newid";
+            }
+
+    }
+    function newlist() {
+        const userDeleteConfirmation = confirm('你确定要刷新列表吗吗？');
+            if (userDeleteConfirmation) {
+                window.location.href = "/newlist";
+            }
+
     }
 </script>
 

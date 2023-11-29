@@ -155,7 +155,7 @@ def login_required(view_func):
 @login_required
 def index():
     username = session.get('username')
-    return render_template('homepage.html')
+    return render_template('homepage.html',username = username)
 
 @app.route('/goabout', methods=['POST'])
 def index2():
@@ -284,6 +284,27 @@ def delete_user(user_id):
 
     return redirect('/userpush')
 
+@app.route('/newid', methods=['GET', 'POST'])
+@login_required
+def newid():
+        mydb._open_connection()  # 打开数据库连接
+        cursor = mydb.cursor()  # 获取游标
+
+        # 执行重新排序的SQL语句
+        cursor.execute('SET @new_id := 0')
+        update_query = 'UPDATE user SET id = @new_id := @new_id + 1 ORDER BY id'
+        cursor.execute(update_query)
+        # 提交重新排序事务
+        mydb.commit()
+
+        mydb.close()  # 所有语句执行完成后再关闭数据库连接
+        return redirect('/userpush')
+
+@app.route('/newlist', methods=['GET', 'POST'])
+@login_required
+def newlist():
+    return redirect('/userpush')
+
 @app.route('/applog')
 @login_required
 def applog():
@@ -294,7 +315,35 @@ def applog():
 @login_required
 def detegrade():
     username = session.get('username')
-    return render_template('delgrade.html',username = username)
+    # mydb = mysql.connector.connect(
+    # host="47.115.200.81",
+    # user="root",
+    # password="wqh@2023",
+    # database="expression_generator",
+    # port = 3306
+    #     )
+    # if not mydb.is_connected():
+    #     mydb = mysql.connector.connect(
+    #     host="47.115.200.81",
+    #     user="root",
+    #     password="wqh@2023",
+    #     database="expression_generator",
+    #     port = 3306
+    #     )
+    #     print("连接成功（重新连接）")
+    # else:
+    #     print("连接成功")
+    username = session.get('username')
+    # if username != 'Administrator'or'amy_ad'or'wqh_ad':
+    #     return redirect('/home')
+    # else:
+    mydb._open_connection()
+    mysqlif()
+    cursor.execute("SELECT * FROM pupil")
+    pupils = cursor.fetchall()
+    mydb.close()
+    username = session.get('username')
+    return render_template('delgrade.html',pupils = pupils,username=username)
 
 @app.route('/delgradepupil', methods=['GET', 'POST'])
 @login_required
@@ -325,4 +374,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(port=5001,host='0.0.0.0')
+    app.run(port=5001)#,host='0.0.0.0'
