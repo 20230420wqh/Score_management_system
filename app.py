@@ -27,7 +27,8 @@ try:
         user="root",
         password="wqh@2023",
         database="Score_management_system__teacher",
-        port = 3306
+        port = 3306,
+        charset='utf8mb4'   # 指定字符集
     )
     cursor = mydb.cursor()
     # 如果连接成功
@@ -65,16 +66,18 @@ def mysqlif():
     host="47.115.200.81",
     user="root",
     password="wqh@2023",
-    database="expression_generator",
-    port = 3306
+    database="Score_management_system__teacher",
+    port = 3306,
+    charset='utf8mb4'   # 指定字符集
         )
     if not mydb.is_connected():
         mydb = mysql.connector.connect(
         host="47.115.200.81",
         user="root",
         password="wqh@2023",
-        database="expression_generator",
-        port = 3306
+        database="Score_management_system__teacher",
+        port = 3306,
+        charset='utf8mb4'   # 指定字符集
         )
         print("连接成功（已重新连接）")
     else:
@@ -86,6 +89,35 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 app.secret_key = 'wqh@123#$ddaa&%'  # 替换为安全的密钥
 
+def get_next_id_of_detet():
+    conn = mysql.connector.connect(
+        host="47.115.200.81",
+        user="root",
+        password="wqh@2023",
+        database="Score_management_system__teacher",
+        port = 3306,
+        charset='utf8mb4'   # 指定字符集
+    )
+    
+    cursor = conn.cursor()
+    select_query = "SELECT id FROM delet ORDER BY id DESC LIMIT 1"
+
+    try:
+        cursor.execute(select_query)
+        result = cursor.fetchone()
+        if result:
+            last_id = result[0]
+            next_id = last_id + 1
+        else:
+            next_id = 1
+    except mysql.connector.Error as err:
+        print("Something went wrong: {}".format(err))
+        next_id = None
+    finally:
+        cursor.close()
+        conn.close()
+
+    return next_id
 @app.route('/')
 def default_route():
     return redirect('/loginface')
@@ -345,10 +377,42 @@ def detegrade():
     username = session.get('username')
     return render_template('delgrade.html',pupils = pupils,username=username)
 
-@app.route('/delgradepupil', methods=['GET', 'POST'])
+@app.route('/delgradepupil', methods=['POST'])
 @login_required
 def pushpupildel():
+    options_selected = request.form.getlist('options')
+    print(options_selected)
+    dif = 'Option 4'
+    # mydb._open_connection()  # 打开数据库连接
+    # cursor = mydb.cursor()  # 获取游标
+    # newid2 = get_next_id_of_detet()
+    # insert_query = ("insert into delet (id) values (%s)")
+    # par2 = (newid2,)
+    # cursor.execute(insert_query, par2)
+    # mydb.commit()
+    # mydb.close()  # 所有语句执行完成后再关闭数据库连接
 
+    if dif in options_selected:
+        out_why = request.form.get('inputText')
+        print(out_why)
+        mydb._open_connection()  # 打开数据库连接
+        conn = mysql.connector.connect(
+        host="47.115.200.81",
+        user="root",
+        password="wqh@2023",
+        database="Score_management_system__teacher",
+        port = 3306
+        )
+        cursor = conn.cursor()  # 获取游标
+        why = '其他'
+        insert_query = ("insert into delet (why,out_why) values (%s,%s)")
+        par2 = (why,out_why)
+        cursor.execute(insert_query, par2)
+        conn.commit()
+        mydb.close()  # 所有语句执行完成后再关闭数据库连接
+
+    else:
+        print("无备注")
     return redirect('/detelgrade')
 # @app.route('/newid')
 # def mewid():
