@@ -440,7 +440,8 @@ def pushpupildel():
         # conn.commit()
     conn.commit()
     mydb.close()
-    return redirect('/detelgrade')
+    # redirect('/detelgrade')
+    return redirect('/newidofdel')
 # @app.route('/newid')
 # def mewid():
 #     mydb._open_connection()
