@@ -11,6 +11,7 @@ import zipfile
 import mysql.connector
 from datetime import datetime
 from flask_session import Session
+import datetime
 #
 # mydb = mysql.connector.connect(
 #         host="localhost",
@@ -383,36 +384,62 @@ def pushpupildel():
     options_selected = request.form.getlist('options')
     print(options_selected)
     dif = 'Option 4'
+    dif2 = 'Option 1'
+    dif3 = 'Option 2'
+    dif4 = 'Option 3'
+    username = session.get('username')
     # mydb._open_connection()  # 打开数据库连接
     # cursor = mydb.cursor()  # 获取游标
-    # newid2 = get_next_id_of_detet()
-    # insert_query = ("insert into delet (id) values (%s)")
-    # par2 = (newid2,)
+    # insert_query = ("insert into delet (username) values (%s)")
+    # par2 = (username,)
     # cursor.execute(insert_query, par2)
     # mydb.commit()
     # mydb.close()  # 所有语句执行完成后再关闭数据库连接
-
-    if dif in options_selected:
-        out_why = request.form.get('inputText')
-        print(out_why)
-        mydb._open_connection()  # 打开数据库连接
-        conn = mysql.connector.connect(
+    current_datetime  = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    week = str(datetime.datetime.today().weekday() + 1)
+    name = request.form.get('pupil')
+    
+    mydb._open_connection()
+    conn = mysql.connector.connect(
         host="47.115.200.81",
         user="root",
         password="wqh@2023",
         database="Score_management_system__teacher",
         port = 3306
         )
-        cursor = conn.cursor()  # 获取游标
+    cursor = conn.cursor()  # 获取游标 
+    if dif in options_selected:
+        out_why = request.form.get('inputText')
+        print(out_why)
         why = '其他'
-        insert_query = ("insert into delet (why,out_why) values (%s,%s)")
-        par2 = (why,out_why)
+        insert_query = ("insert into delet (username,name,why,week,datetime,out_why) values (%s,%s,%s,%s,%s,%s)")
+        par2 = (username,name,why,week,current_datetime,out_why)
         cursor.execute(insert_query, par2)
-        conn.commit()
-        mydb.close()  # 所有语句执行完成后再关闭数据库连接
-
-    else:
-        print("无备注")
+        # conn.commit()
+    elif dif2 in options_selected:         
+        why = '迟到'
+        out_why = '无'
+        insert_query = ("insert into delet (username,name,why,week,datetime,out_why) values (%s,%s,%s,%s,%s,%s)")
+        par2 = (username,name,why,week,current_datetime,out_why)
+        cursor.execute(insert_query, par2)
+        # conn.commit()
+        # print("无备注")
+    elif dif3 in options_selected:
+        why = '午托讲话'
+        out_why = '无'
+        insert_query = ("insert into delet (username,name,why,week,datetime,out_why) values (%s,%s,%s,%s,%s,%s)")
+        par2 = (username,name,why,week,current_datetime,out_why)
+        cursor.execute(insert_query, par2)
+        # conn.commit()
+    elif dif4 in options_selected:
+        why = '早读讲话'
+        out_why = '无'
+        insert_query = ("insert into delet (username,name,why,week,datetime,out_why) values (%s,%s,%s,%s,%s,%s)")
+        par2 = (username,name,why,week,current_datetime,out_why)
+        cursor.execute(insert_query, par2)
+        # conn.commit()
+    conn.commit()
+    mydb.close()
     return redirect('/detelgrade')
 # @app.route('/newid')
 # def mewid():
@@ -428,7 +455,98 @@ def pushpupildel():
 #             mydb.commit()
 #     mydb.close()
 #     return redirect('/userpush')
+@app.route('/dellog')
+@login_required
+def dellog():
+    # mydb = mysql.connector.connect(
+    # host="47.115.200.81",
+    # user="root",
+    # password="wqh@2023",
+    # database="expression_generator",
+    # port = 3306
+    #     )
+    # if not mydb.is_connected():
+    #     mydb = mysql.connector.connect(
+    #     host="47.115.200.81",
+    #     user="root",
+    #     password="wqh@2023",
+    #     database="expression_generator",
+    #     port = 3306
+    #     )
+    #     print("连接成功（重新连接）")
+    # else:
+    #     print("连接成功")
+    username = session.get('username')
+    # if username != 'Administrator'or'amy_ad'or'wqh_ad':
+    #     return redirect('/home')
+    # else:
+    mydb._open_connection()
+    mysqlif()
+    cursor.execute("SELECT * FROM delet")
+    dellog = cursor.fetchall()
+    mydb.close()
+    username = session.get('username')
+    return render_template('dellog.html', dellogs=dellog,username = username)
+@app.route('/dellogd/<int:dellog_id>', methods=['GET', 'POST'])
+def delete_delet(dellog_id):
+        # mydb._open_connection()
+        # # 执行删除用户的SQL语句
+        # delete_query = 'DELETE FROM user WHERE id = %s'
+        # cursor.nextset()
+        # cursor.execute(delete_query, (user_id,))
+        # # 提交事务
+        # mydb.commit()
+        # mydb.close()
+        # mydb._open_connection()
+        # # 执行重新排序的SQL语句
+        # reorder_query = 'SET @new_id := 0; UPDATE user SET id = @new_id := @new_id + 1 ORDER BY id;'
+        # cursor.nextset()
+        # cursor.execute(reorder_query)
 
+        # # 提交重新排序事务
+        # mydb.commit()
+        # mydb.close()
+        # 执行删除用户的SQL语句
+        mydb._open_connection()  # 打开数据库连接
+        cursor = mydb.cursor()  # 获取游标
+
+        # 执行删除用户的SQL语句
+        delete_query = 'DELETE FROM delet WHERE id = %s'
+        cursor.execute(delete_query, (dellog_id,))
+        # 提交事务
+        mydb.commit()
+
+        # 执行重新排序的SQL语句
+        cursor.execute('SET @new_id := 0')
+        update_query = 'UPDATE delet SET id = @new_id := @new_id + 1 ORDER BY id'
+        cursor.execute(update_query)
+        # 提交重新排序事务
+        mydb.commit()
+
+        mydb.close()  # 所有语句执行完成后再关闭数据库连接
+
+        return redirect('/dellog')
+
+@app.route('/newdel', methods=['GET', 'POST'])
+@login_required
+def newdellog():
+    return redirect('/dellog')
+
+@app.route('/newidofdel', methods=['GET', 'POST'])
+@login_required
+def newdelid():
+        mydb._open_connection()  # 打开数据库连接
+        cursor = mydb.cursor()  # 获取游标
+
+        # 执行重新排序的SQL语句
+        cursor.execute('SET @new_id := 0')
+        update_query = 'UPDATE delet SET id = @new_id := @new_id + 1 ORDER BY id'
+        cursor.execute(update_query)
+        # 提交重新排序事务
+        mydb.commit()
+
+        mydb.close()  # 所有语句执行完成后再关闭数据库连接
+        return redirect('/dellog')
 @app.route('/logout', methods=['POST'])
 def logout():
     # 清除会话中的用户信息

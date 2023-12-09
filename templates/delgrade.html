@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>量化分首页</title>
+    <title>量化分-扣分</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/Program_required_style.css">
     <link rel="stylesheet" href="/static/el_button.css">
@@ -79,6 +79,16 @@
         option {
             font-size: 14px;
         }
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .flex-item {
+            display: flex;   /* This ensures the radio button and its label stay on the same line */
+            flex: 0 0 calc(10% - 20px);
+            margin: 10px;
+        }
     </style>
 </head>
 
@@ -93,10 +103,11 @@
             <li><a href="#">成绩管理</a></li>
             <li><a href="#">获奖管理</a></li>
             <li><a href="#">新建扣分</a></li>
+            <li><a href="/dellog">扣分记录</a></li>
             <li><a href="/userpush">用户信息</a></li>
             <!-- <li><a href="/userpush">用户信息</a></li> -->
             <li><a href="#">ip限制</a></li>
-            <li><a href="#">更新日志</a></li>
+            <li><a href="/applog">更新日志</a></li>
             <li><a href="#">意见反馈 </a></li>
         </ul>
     </div>
@@ -105,29 +116,34 @@
         <div class="form-section">
             <!-- 学生选择多选框 -->
             <label for="pupil-multi-selector">选择学生:</label>
-            <select id="pupil-multi-selector" name="pupils" multiple>
+            <div class="flex-container">
+            {% for pupil in pupils %}
+            <input type="radio" name="pupil" checked="checked" id="{{pupil[0]}}" value="{{pupil[1]}}">{{pupil[0]}}：{{pupil[1]}}
+            {% endfor %}
+            </div>
+            <!-- <select id="pupil-multi-selector" name="pupils" multiple>
                 {% for pupil in pupils %}
                     <option value="{{pupils}}">{{pupils}}</option>
                 {% endfor %}
-            </select>
+            </select> -->
         </div>
         <div class="form-section">
             <!-- 多选框列表 -->
             <label>选项:</label>
             <div>
-                <input type="checkbox" id="option1" name="options" value="Option 1">
+                <input type="radio" id="option1" name="options" value="Option 1">
                 <label for="option1">迟到</label>
             </div>
             <div>
-                <input type="checkbox" id="option2" name="options" value="Option 2">
+                <input type="radio" id="option2" name="options" value="Option 2">
                 <label for="option2">午托讲话</label>
             </div>
             <div>
-                <input type="checkbox" id="option3" name="options" value="Option 3">
+                <input type="radio" id="option3" name="options" value="Option 3">
                 <label for="option3">早读讲话</label>
             </div>
             <div>
-                <input type="checkbox" id="option4" name="options" value="Option 4">
+                <input type="radio" id="option4" name="options" value="Option 4">
                 <label for="option4">其他</label>
             </div>
             <div class="form-section">
