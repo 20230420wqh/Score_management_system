@@ -408,34 +408,35 @@ def pushpupildel():
         port = 3306
         )
     cursor = conn.cursor()  # 获取游标 
+    delgrade = request.form.get('content')
     if dif in options_selected:
         out_why = request.form.get('inputText')
         print(out_why)
         why = '其他'
-        insert_query = ("insert into delet (username,name,why,week,datetime,out_why) values (%s,%s,%s,%s,%s,%s)")
-        par2 = (username,name,why,week,current_datetime,out_why)
+        insert_query = ("insert into delet (username,name,why,week,datetime,out_why,delgrade) values (%s,%s,%s,%s,%s,%s,%s)")
+        par2 = (username,name,why,week,current_datetime,out_why,delgrade)
         cursor.execute(insert_query, par2)
         # conn.commit()
     elif dif2 in options_selected:         
         why = '迟到'
         out_why = '无'
-        insert_query = ("insert into delet (username,name,why,week,datetime,out_why) values (%s,%s,%s,%s,%s,%s)")
-        par2 = (username,name,why,week,current_datetime,out_why)
+        insert_query = ("insert into delet (username,name,why,week,datetime,out_why,delgrade) values (%s,%s,%s,%s,%s,%s,%s)")
+        par2 = (username,name,why,week,current_datetime,out_why,delgrade)
         cursor.execute(insert_query, par2)
         # conn.commit()
         # print("无备注")
     elif dif3 in options_selected:
         why = '午托讲话'
         out_why = '无'
-        insert_query = ("insert into delet (username,name,why,week,datetime,out_why) values (%s,%s,%s,%s,%s,%s)")
-        par2 = (username,name,why,week,current_datetime,out_why)
+        insert_query = ("insert into delet (username,name,why,week,datetime,out_why,delgrade) values (%s,%s,%s,%s,%s,%s,%s)")
+        par2 = (username,name,why,week,current_datetime,out_why,delgrade)
         cursor.execute(insert_query, par2)
         # conn.commit()
     elif dif4 in options_selected:
         why = '早读讲话'
         out_why = '无'
-        insert_query = ("insert into delet (username,name,why,week,datetime,out_why) values (%s,%s,%s,%s,%s,%s)")
-        par2 = (username,name,why,week,current_datetime,out_why)
+        insert_query = ("insert into delet (username,name,why,week,datetime,out_why,delgrade) values (%s,%s,%s,%s,%s,%s,%s)")
+        par2 = (username,name,why,week,current_datetime,out_why,delgrade)
         cursor.execute(insert_query, par2)
         # conn.commit()
     conn.commit()
@@ -456,57 +457,30 @@ def pushpupildel():
 #             mydb.commit()
 #     mydb.close()
 #     return redirect('/userpush')
+
 @app.route('/dellog')
 @login_required
 def dellog():
-    # mydb = mysql.connector.connect(
-    # host="47.115.200.81",
-    # user="root",
-    # password="wqh@2023",
-    # database="expression_generator",
-    # port = 3306
-    #     )
-    # if not mydb.is_connected():
-    #     mydb = mysql.connector.connect(
-    #     host="47.115.200.81",
-    #     user="root",
-    #     password="wqh@2023",
-    #     database="expression_generator",
-    #     port = 3306
-    #     )
-    #     print("连接成功（重新连接）")
-    # else:
-    #     print("连接成功")
     username = session.get('username')
-    # if username != 'Administrator'or'amy_ad'or'wqh_ad':
-    #     return redirect('/home')
-    # else:
     mydb._open_connection()
-    mysqlif()
+    conn = mysql.connector.connect(
+    host="47.115.200.81",
+    user="root",
+    password="wqh@2023",
+    database="Score_management_system__teacher",
+    port = 3306,
+    charset='utf8mb4'   # 指定字符集
+        )
+    cursor = conn.cursor()  # 获取游标
     cursor.execute("SELECT * FROM delet")
     dellog = cursor.fetchall()
     mydb.close()
     username = session.get('username')
+    print(dellog)
     return render_template('dellog.html', dellogs=dellog,username = username)
+
 @app.route('/dellogd/<int:dellog_id>', methods=['GET', 'POST'])
 def delete_delet(dellog_id):
-        # mydb._open_connection()
-        # # 执行删除用户的SQL语句
-        # delete_query = 'DELETE FROM user WHERE id = %s'
-        # cursor.nextset()
-        # cursor.execute(delete_query, (user_id,))
-        # # 提交事务
-        # mydb.commit()
-        # mydb.close()
-        # mydb._open_connection()
-        # # 执行重新排序的SQL语句
-        # reorder_query = 'SET @new_id := 0; UPDATE user SET id = @new_id := @new_id + 1 ORDER BY id;'
-        # cursor.nextset()
-        # cursor.execute(reorder_query)
-
-        # # 提交重新排序事务
-        # mydb.commit()
-        # mydb.close()
         # 执行删除用户的SQL语句
         mydb._open_connection()  # 打开数据库连接
         cursor = mydb.cursor()  # 获取游标
@@ -536,18 +510,33 @@ def newdellog():
 @app.route('/newidofdel', methods=['GET', 'POST'])
 @login_required
 def newdelid():
-        mydb._open_connection()  # 打开数据库连接
-        cursor = mydb.cursor()  # 获取游标
-
+        # mydb._open_connection()  # 打开数据库连接
+        # conn = mysql.connector.connect(
+        # host="47.115.200.81",
+        # user="root",
+        # password="wqh@2023",
+        # database="Score_management_system__teacher",
+        # port = 3306
+        # )
+        mydb._open_connection()
+        conn = mysql.connector.connect(
+        host="47.115.200.81",
+        user="root",
+        password="wqh@2023",
+        database="Score_management_system__teacher",
+        port = 3306
+        )
+        cursor = conn.cursor()  # 获取游标
         # 执行重新排序的SQL语句
         cursor.execute('SET @new_id := 0')
         update_query = 'UPDATE delet SET id = @new_id := @new_id + 1 ORDER BY id'
         cursor.execute(update_query)
         # 提交重新排序事务
-        mydb.commit()
+        conn.commit()
 
         mydb.close()  # 所有语句执行完成后再关闭数据库连接
         return redirect('/dellog')
+
 @app.route('/logout', methods=['POST'])
 def logout():
     # 清除会话中的用户信息

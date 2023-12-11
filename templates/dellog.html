@@ -204,6 +204,7 @@
                     <th>星期</th>
                     <th>时间</th>
                     <th>备注</th>
+                    <th>扣分数</th>
                     <th>功能</th>
                 </tr>
             </thead>
@@ -215,40 +216,14 @@
                     <td>{{ log[2] }}</td>
                     <td>{{ log[3] }}</td>
                     <td>{{ log[4] }}</td>
-                    <td>{{ log[5].strftime('%Y-%m-%d %H:%M:%S') if log[5] else '' }}</td>
+                    <td>{{ log[5].strftime('%Y-%m-%d %H:%M:%S') }} </td>
                     <td>{{ log[6] }}</td>
+                    <td>{{ log[7] }}</td>
                     <td><a class="leibiao delete-link" href="/dellogd/{{ log[0] }}" onclick="return confirm('你确定要删除吗？')">删除</a></td>
                 {% endfor %}
             </tbody>
         </table>
-    <!-- </div>
-        <p style="color: #ff6666;">此为扣分记录</p>
-    </div> -->
 </body>
-<!-- <script>
-    // const userValue = "{{username}}"; // 这里替换为您实际的用户值
-    //         // 函数用于显示消息
-    //         function mess(content) {
-    //         var messageContainer = document.getElementById("messageContainer");
-    //         messageContainer.innerText = content;
-    
-    //         // 显示消息
-    //         messageContainer.style.display = "block";
-    
-    //         // 在3秒后隐藏消息
-    //         setTimeout(function () {
-    //             messageContainer.style.display = "none";
-    //         }, 3000); // 3秒
-    //     }
-    const userValue = "{{username}}"; // 替换为实际的用户名值
-
-    if (userValue !== "Administrator" && userValue !== "amy_ad" && userValue !== "wqh_ad") {
-        alert("你没有权限查看");
-        window.location.href = "/home";
-
-    }
-</script> -->
-
 <script>
     const deleteLinksContainer = document.querySelector('.container');
 
@@ -263,40 +238,20 @@
     });
 </script>
 <script>
-    // const protectedDeleteLinks = document.querySelectorAll('.protected-delete-link');
-    //         // 函数用于显示消息
-    //         function mess(content) {
-    //         var messageContainer = document.getElementById("messageContainer");
-    //         messageContainer.innerText = content;
-    
-    //         // 显示消息
-    //         messageContainer.style.display = "block";
-    
-    //         // 在3秒后隐藏消息
-    //         setTimeout(function () {
-    //             messageContainer.style.display = "none";
-    //         }, 3000); // 3秒
-    //     }
-    // protectedDeleteLinks.forEach(link => {
-    //     link.addEventListener('click', function(event) {
-    //         event.preventDefault();
-    //         // 弹出消息提示框，告知用户无法删除
-    //          alert('你无法删除此用户,你的权限不够');
-    //         this.message(你无法删除管理员账户)
-    //         mess("对不起，你的权限不够，无法删除")
-    //     });
-    // });
-    // function deleteno() {
-    //     // window.location.href = "/home";
-    //     alert("你无法删除此用户,你的权限不够");
-    // }
+
     function newid() {
-        const userDeleteConfirmation = confirm('你确定要重排id吗？');
+        const userValue = "{{username}}";
+        if (userValue !== "Administrator" && userValue !== "amy_ad" && userValue !== "wqh_ad") {
+            alert("你的权限不够,无法更新");
+            // window.location.href = "/home";
+        } else {
+            const userDeleteConfirmation = confirm('此操作可能会导致系统错误，你确定要重排id吗？');
             if (userDeleteConfirmation) {
                 window.location.href = "/newidofdel";
             }
-
+        }
     }
+
     function newlist() {
         const userDeleteConfirmation = confirm('你确定要刷新列表吗吗？');
             if (userDeleteConfirmation) {
