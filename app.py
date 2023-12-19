@@ -1,8 +1,9 @@
 import os
-#import logging
+import logging
 import time
 from functools import wraps
-from flask import Flask, request, send_file,redirect,session,render_template
+from flask import Flask, request, send_file,redirect,session,render_template, send_file
+
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment, Font
@@ -190,11 +191,16 @@ def index():
     username = session.get('username')
     return render_template('homepage.html',username = username)
 
+@app.route('/downloadwhat')
+def download():
+    print("有用户下载")
+    return redirect("/static/aboutapp.docx")
+
 @app.route('/goabout', methods=['POST'])
 def index2():
     return redirect('/about')
 
-@app.route('/about')
+@app.route('/about') 
 @login_required
 def index3():
     return app.send_static_file('aboutwqh.html')
@@ -383,6 +389,7 @@ def detegrade():
 def pushpupildel():
     options_selected = request.form.getlist('options')
     print(options_selected)
+    #每个对应选项
     dif = 'Option 4'
     dif2 = 'Option 1'
     dif3 = 'Option 2'
@@ -409,6 +416,7 @@ def pushpupildel():
         )
     cursor = conn.cursor()  # 获取游标 
     delgrade = request.form.get('content')
+    #后期优化
     if dif in options_selected:
         out_why = request.form.get('inputText')
         print(out_why)
@@ -518,24 +526,32 @@ def newdelid():
         # database="Score_management_system__teacher",
         # port = 3306
         # )
-        mydb._open_connection()
-        conn = mysql.connector.connect(
-        host="47.115.200.81",
-        user="root",
-        password="wqh@2023",
-        database="Score_management_system__teacher",
-        port = 3306
-        )
-        cursor = conn.cursor()  # 获取游标
-        # 执行重新排序的SQL语句
-        cursor.execute('SET @new_id := 0')
-        update_query = 'UPDATE delet SET id = @new_id := @new_id + 1 ORDER BY id'
-        cursor.execute(update_query)
+        username = session.get('username')
+        if username == 'Administrator' or username == 'wqh_ad' or username == 'amy_ad':
+            mydb._open_connection()
+            conn = mysql.connector.connect(
+            host="47.115.200.81",
+                user="root",
+                password="wqh@2023",
+                database="Score_management_system__teacher",
+                port = 3306
+                )
+            cursor = conn.cursor()  # 获取游标
+            # 执行重新排序的SQL语句
+            cursor.execute('SET @new_id := 0')
+            update_query = 'UPDATE delet SET id = @new_id := @new_id + 1 ORDER BY id'
+            cursor.execute(update_query)
         # 提交重新排序事务
-        conn.commit()
-
-        mydb.close()  # 所有语句执行完成后再关闭数据库连接
+            conn.commit()
+            mydb.close()  # 所有语句执行完成后再关闭数据库连接
+        else:
+            print("无法更新")
         return redirect('/dellog')
+
+@app.route('/pulldate')
+def pulldate():
+    username = session.get('username')
+    return render_template('downdate.html',username=username)
 
 @app.route('/logout', methods=['POST'])
 def logout():
@@ -546,4 +562,5 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(port=5001,host='0.0.0.0')#
+    app.run(port=5001,host='0.0.0.0')
+    #2023.12.19
