@@ -415,6 +415,7 @@ def pushpupildel():
         port = 3306
         )
     cursor = conn.cursor()  # 获取游标 
+    #扣分数
     delgrade = request.form.get('content')
     #后期优化
     if dif in options_selected:
@@ -449,6 +450,20 @@ def pushpupildel():
         # conn.commit()
     conn.commit()
     mydb.close()
+    mydb._open_connection()
+    cursor = mydb.cursor()
+
+        # 更新指定用户名的分数
+    update_query = """
+        UPDATE pupil
+        SET grade = grade - %s
+        WHERE who = %s
+    """
+
+    cursor.execute(update_query, (delgrade, name))
+    mydb.commit()  # 不要忘记提交事务来保存更改
+
+    mydb.close() 
     # redirect('/detelgrade')
     return redirect('/newidofdel')
 # @app.route('/newid')
@@ -492,6 +507,28 @@ def delete_delet(dellog_id):
         # 执行删除用户的SQL语句
         mydb._open_connection()  # 打开数据库连接
         cursor = mydb.cursor()  # 获取游标
+        select_query = 'SELECT delgrade FROM delet WHERE id = %s'
+        cursor.execute(select_query, (dellog_id,))
+        result = cursor.fetchone()
+        if result is None:
+            return "Error: No such delgrade in delet table"
+        print(result)
+        delgrade = result[0]
+
+        select_query = 'SELECT name FROM delet WHERE id = %s'
+        cursor.execute(select_query, (dellog_id,))
+        result2 = cursor.fetchone()
+        if result is None:
+            return "Error: No such name in delet table"
+        print(result2)
+        name = result2[0]
+        # 更新 pupil 表
+        update_query = """
+        UPDATE pupil
+        SET grade = grade + %s
+        WHERE who = %s
+        """
+        cursor.execute(update_query, (delgrade, name))
 
         # 执行删除用户的SQL语句
         delete_query = 'DELETE FROM delet WHERE id = %s'
