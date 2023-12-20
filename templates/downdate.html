@@ -9,7 +9,11 @@
     <link rel="stylesheet" href="/static/Program_required_style.css">
     <link rel="stylesheet" href="/static/el_button.css">
     <style>
-
+    hr {  
+    border: none;  
+    height: 2px;  
+    background-color: #000000;  
+    } 
     </style>
 </head>
 
@@ -20,7 +24,7 @@
             <h1 class="graycolor container">功能</h1>
             <li><a href= "/home">首页</a></li>
             <li><a href= "/add">量化分查看</a></li>
-            <li><a href="#">导出</a></li>
+            <li><a href="#">导出与导入</a></li>
             <li><a href="#">成绩管理</a></li>
             <li><a href="#">获奖管理</a></li>
             <li><a href="/detelgrade">新建扣分</a></li>
@@ -28,13 +32,37 @@
             <li><a href="/userpush">用户信息</a></li>
             <!-- <li><a href="/userpush">用户信息</a></li> -->
             <li><a href="#">ip限制</a></li>
-            <li><a href="#">更新日志</a></li>
+            <li><a href="/applog">更新日志</a></li>
             <li><a href="#">意见反馈 </a></li>
         </ul>
     </div>
     <div>
+        <h1>导入</h1>
+        <h2>导入扣分记录</h2>
+        <form action="/pulldate" method="post" enctype="multipart/form-data">
+            <input type="file" name="file"><br>
+            <input type="submit" value="update">
+        </form>
+        <hr>  
+        <h2>导入加分记录</h2>
+        <form action="/pulldate" method="post" enctype="multipart/form-data">
+            <input type="file" name="file"><br>
+            <input type="submit" value="update">
+        </form>
+        <hr>
         <h1>导出</h1>
-        </div>
+        <button class="is-round el-button">下载总分数</button>
+        <button class="is-round el-button">下载扣分记录</button>
+        <button class="is-round el-button">下载加分记录</button>
+        <button class="is-round el-button"">下载记录模板文件</button>
+         <!-- onclick="donlodsinloglogs() -->
+        <button class="is-round el-button">下载导入扣分模板文件</button>
+        <button class="is-round el-button">下载导入加分模板文件</button>
     </div>
 </body>
+<script>
+    // function donlodsinloglogs() {
+    //     window.location.href = "/donlodsinloglogs";
+    // }
+</script>
 </html>
