@@ -31,7 +31,7 @@
             <li><a href="/dellog">扣分记录</a></li>
             <li><a href="/userpush">用户信息</a></li>
             <!-- <li><a href="/userpush">用户信息</a></li> -->
-            <li><a href="#">ip限制</a></li>
+            <li><a href="/ipcondition">ip限制</a></li>
             <li><a href="/applog">更新日志</a></li>
             <li><a href="#">意见反馈 </a></li>
         </ul>
@@ -54,15 +54,14 @@
         <button class="is-round el-button">下载总分数</button>
         <button class="is-round el-button">下载扣分记录</button>
         <button class="is-round el-button">下载加分记录</button>
-        <button class="is-round el-button"">下载记录模板文件</button>
-         <!-- onclick="donlodsinloglogs() -->
+        <button class="is-round el-button" onclick="donlodsinloglogs()" >下载记录模板文件</button>
         <button class="is-round el-button">下载导入扣分模板文件</button>
         <button class="is-round el-button">下载导入加分模板文件</button>
     </div>
 </body>
 <script>
-    // function donlodsinloglogs() {
-    //     window.location.href = "/donlodsinloglogs";
-    // }
+    function donlodsinloglogs() {
+        window.location.href = "/donlodsinloglogs";
+    }
 </script>
 </html>

@@ -269,15 +269,10 @@ def userpush():
     # else:
     #     print("连接成功")
     username = session.get('username')
-    # if username != 'Administrator'or'amy_ad'or'wqh_ad':
-    #     return redirect('/home')
-    # else:
     mydb._open_connection()
-    mysqlif()
     cursor.execute("SELECT * FROM user")
     users = cursor.fetchall()
     mydb.close()
-    username = session.get('username')
     return render_template('userpush.html', users=users,username = username)
 
 @app.route('/delete/<int:user_id>', methods=['GET', 'POST'])
@@ -589,6 +584,20 @@ def newdelid():
 def pulldate():
     username = session.get('username')
     return render_template('downdate.html',username=username)
+
+@app.route('/ipcondition')
+def ipcondition():
+    username = session.get('username')
+    mydb._open_connection()
+    cursor.execute("SELECT * FROM blackip")
+    blackip = cursor.fetchall()
+    mydb.close()
+    mydb._open_connection()
+    cursor.execute("SELECT * FROM whiteip")
+    whiteip = cursor.fetchall()
+    mydb.close()
+    client_ip = request.remote_addr
+    return render_template('ipcondition.html',username=username,blackips=blackip,whiteips=whiteip,client_ip=client_ip)
 
 @app.route('/logout', methods=['POST'])
 def logout():
