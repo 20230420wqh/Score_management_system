@@ -120,11 +120,71 @@ def get_next_id_of_detet():
         conn.close()
 
     return next_id
+
+def check_condition(func):
+    def wrapper(*args, **kwargs):
+        # 获取用户登录的IP地址
+        user_ip = request.remote_addr
+
+        # 连接数据库
+        connection = mysql.connector.connect(
+        host="47.115.200.81",
+        user="root",
+        password="wqh@2023",
+        database="Score_management_system__teacher",
+        port = 3306
+        )
+        cursor = connection.cursor()
+        appid = 'ip'
+        cursor.execute("SELECT * FROM appcondition WHERE name = %s", (appid,))
+        condition_data = cursor.fetchone()
+        print("查询程序配置")
+        print(condition_data)
+
+        if condition_data:
+            print("正在获取状态")
+            condition = int(condition_data[2])
+            print("正在获取状态")
+            print(condition)
+            if condition == 2:
+                # 如果condition为2，从BlackIP表中查询IP
+                cursor.execute("SELECT * FROM blackip WHERE ip = %s", (user_ip,))
+                print("查询黑名单IP")
+                black_ip_data = cursor.fetchone()
+                if black_ip_data:
+                    cursor.close()
+                    connection.close()
+                    return redirect('/ipsorry')
+
+            elif condition == 3:
+                cursor.execute("SELECT * FROM WhiteIP WHERE ip = %s", (user_ip,))
+                print("查询白名单")
+                white_ip_data = cursor.fetchone()
+                if white_ip_data:
+                    # 如果用户IP在WhiteIP表中，什么也不执行
+                    cursor.close()
+                    connection.close()
+                    return func(*args, **kwargs)
+            elif condition == 1:
+                print("无限制IP访问")
+        cursor.close()
+        connection.close()
+        return func(*args, **kwargs)
+
+    return wrapper
+
 @app.route('/')
+
 def default_route():
     return redirect('/loginface')
 
+@app.route('/ipsorry')
+def ipsorry():
+    user_ip = request.remote_addr
+    return render_template("ipsorry.html",user_ip=user_ip)
+
 @app.route('/loginface')
+@check_condition
 def login():
     session.pop('username', None)
     return app.send_static_file("login_interface.html")
@@ -185,36 +245,43 @@ def login_required(view_func):
             return redirect('/loginface')
     return wrapped_view
 
-@app.route('/home')
+@app.route('/home', endpoint='home_endpoint')
+@check_condition
 @login_required
-def index():
+def home():
     username = session.get('username')
     return render_template('homepage.html',username = username)
 
-@app.route('/downloadwhat')
+@app.route('/downloadwhat', endpoint='downloadwhat')
+@check_condition
 def download():
     print("有用户下载")
     return redirect("/static/aboutapp.docx")
 
 @app.route('/goabout', methods=['POST'])
+
 def index2():
     return redirect('/about')
 
-@app.route('/about') 
+@app.route('/about', endpoint='about') 
+@check_condition
 @login_required
 def index3():
     return app.send_static_file('aboutwqh.html')
 
 @app.route('/gohome', methods=['POST'])
+
 def index4():    
     return redirect('/home')
 
 @app.route('/goadd',methods=['POST'])
+
 def index5():
     return redirect('/add')
 
-@app.route('/add')
+@app.route('/add', endpoint='addin')
 @login_required
+@check_condition
 def index6():
     username = session.get('username')
         # mydb = mysql.connector.connect(
@@ -247,7 +314,8 @@ def index6():
     username = session.get('username')
     return render_template('grade_add.html', users=users,username = username)
     #app.send_static_file这个是旧的路径
-@app.route('/userpush')
+@app.route('/userpush', endpoint='userpush')
+@check_condition
 @login_required
 def userpush():
     # mydb = mysql.connector.connect(
@@ -276,6 +344,7 @@ def userpush():
     return render_template('userpush.html', users=users,username = username)
 
 @app.route('/delete/<int:user_id>', methods=['GET', 'POST'])
+
 def delete_user(user_id):
     if user_id == 1 or user_id == 2 or user_id ==3:
         redirect('/userpush')
@@ -319,6 +388,7 @@ def delete_user(user_id):
     return redirect('/userpush')
 
 @app.route('/newid', methods=['GET', 'POST'])
+
 @login_required
 def newid():
         mydb._open_connection()  # 打开数据库连接
@@ -335,18 +405,21 @@ def newid():
         return redirect('/userpush')
 
 @app.route('/newlist', methods=['GET', 'POST'])
+
 @login_required
 def newlist():
     return redirect('/userpush')
 
-@app.route('/applog')
+@app.route('/applog',endpoint='applog')
+@check_condition
 @login_required
 def applog():
     username = session.get('username')
     return render_template('applog.html',username = username)
     
-@app.route('/detelgrade')
+@app.route('/detelgrade',endpoint='detelgrade')
 @login_required
+@check_condition
 def detegrade():
     username = session.get('username')
     # mydb = mysql.connector.connect(
@@ -476,7 +549,8 @@ def pushpupildel():
 #     mydb.close()
 #     return redirect('/userpush')
 
-@app.route('/dellog')
+@app.route('/dellog',endpoint='dellog')
+@check_condition
 @login_required
 def dellog():
     username = session.get('username')
@@ -498,6 +572,7 @@ def dellog():
     return render_template('dellog.html', dellogs=dellog,username = username)
 
 @app.route('/dellogd/<int:dellog_id>', methods=['GET', 'POST'])
+
 def delete_delet(dellog_id):
         # 执行删除用户的SQL语句
         mydb._open_connection()  # 打开数据库连接
@@ -543,11 +618,13 @@ def delete_delet(dellog_id):
         return redirect('/dellog')
 
 @app.route('/newdel', methods=['GET', 'POST'])
+
 @login_required
 def newdellog():
     return redirect('/dellog')
 
 @app.route('/newidofdel', methods=['GET', 'POST'])
+
 @login_required
 def newdelid():
         # mydb._open_connection()  # 打开数据库连接
@@ -580,12 +657,16 @@ def newdelid():
             print("无法更新")
         return redirect('/dellog')
 
-@app.route('/pulldate')
+@app.route('/pulldate',endpoint='pulldate')
+@check_condition
+@login_required
 def pulldate():
     username = session.get('username')
     return render_template('downdate.html',username=username)
 
-@app.route('/ipcondition')
+@app.route('/ipcondition',endpoint='ipcondition')
+@check_condition
+@login_required
 def ipcondition():
     username = session.get('username')
     mydb._open_connection()
@@ -609,4 +690,3 @@ def logout():
 
 if __name__ == '__main__':
     app.run(port=5001,host='0.0.0.0')
-    #2023.12.19
