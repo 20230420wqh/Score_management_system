@@ -157,7 +157,7 @@ def check_condition(func):
                     return redirect('/ipsorry')
 
             elif condition == 3:
-                cursor.execute("SELECT * FROM WhiteIP WHERE ip = %s", (user_ip,))
+                cursor.execute("SELECT * FROM whiteip WHERE ip = %s", (user_ip,))
                 print("查询白名单")
                 white_ip_data = cursor.fetchone()
                 if white_ip_data:
@@ -165,6 +165,8 @@ def check_condition(func):
                     cursor.close()
                     connection.close()
                     return func(*args, **kwargs)
+                else:
+                    return redirect("/ipsorry")
             elif condition == 1:
                 print("无限制IP访问")
         cursor.close()
@@ -174,7 +176,7 @@ def check_condition(func):
     return wrapper
 
 @app.route('/')
-
+@check_condition
 def default_route():
     return redirect('/loginface')
 
@@ -183,7 +185,7 @@ def ipsorry():
     user_ip = request.remote_addr
     return render_template("ipsorry.html",user_ip=user_ip)
 
-@app.route('/loginface')
+@app.route('/loginface', endpoint='loginface')
 @check_condition
 def login():
     session.pop('username', None)

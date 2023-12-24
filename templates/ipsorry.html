@@ -41,6 +41,25 @@ img {
     height: auto;
     border-radius: 8px;
 }
+.el-button {
+  /* 按钮的基本样式 */
+  /* 你可以在这里定义按钮的默认样式 */
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  white-space: nowrap;
+  background-color: #409eff;
+  border: 1px solid #dcdfe6;
+  color: #fff;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  padding: 12px 20px;
+  border-radius: 4px;
+}
 </style>
 </head>
 <body>
@@ -52,10 +71,17 @@ img {
             <p>Sorry, your IP address is not allowed to access this website.</p>
             <h2>IP限制,你的IP是{{user_ip}}</h2>
             <p>对不起，您的IP地址不允许访问本网站</p>
+            <button onclick="fucha()" class="el-button">点击重新检查ip</button>
             <p style="color: #e74c3c;">(你的ip已被限制)</p>
         </div>
         <img src="/static/images/ipsorry.png" alt="Access Denied Image">
     </div>
 
 </body>
+<script>
+    function fucha() {
+        console.log("复查中");
+        window.location.href = "/loginface";
+    }
+</script>
 </html>
