@@ -27,6 +27,8 @@
             <li><a href="#">导出与导入</a></li>
             <li><a href="#">成绩管理</a></li>
             <li><a href="#">获奖管理</a></li>
+            <li><a href="#">新建加分</a></li>
+            <li><a href="#">加分记录</a></li>
             <li><a href="/detelgrade">新建扣分</a></li>
             <li><a href="/dellog">扣分记录</a></li>
             <li><a href="/userpush">用户信息</a></li>
@@ -54,14 +56,18 @@
         <button class="is-round el-button">下载总分数</button>
         <button class="is-round el-button">下载扣分记录</button>
         <button class="is-round el-button">下载加分记录</button>
-        <button class="is-round el-button" onclick="donlodsinloglogs()" >下载记录模板文件</button>
-        <button class="is-round el-button">下载导入扣分模板文件</button>
-        <button class="is-round el-button">下载导入加分模板文件</button>
+        <button class="is-round el-button" onclick="donlodsinloglogsdl()" >下载上传扣分模板文件</button>
+        <button class="is-round el-button" onclick="donlodsinloglogspu()" >下载上传加分模板文件</button>
     </div>
 </body>
 <script>
-    function donlodsinloglogs() {
-        window.location.href = "/donlodsinloglogs";
+    function donlodsinloglogspu() {
+        console.log("下载加分记录模板");
+        window.location.href = "/donlodsinloglogspu";
+    }
+    function donlodsinloglogsdl() {
+        console.log("下载扣分记录模板文件");
+        window.location.href = "/donlodsinloglogsdl";
     }
 </script>
 </html>

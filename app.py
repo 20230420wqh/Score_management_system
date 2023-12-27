@@ -682,6 +682,14 @@ def ipcondition():
     client_ip = request.remote_addr
     return render_template('ipcondition.html',username=username,blackips=blackip,whiteips=whiteip,client_ip=client_ip)
 
+@app.route("/donlodsinloglogspu")
+def donlodsinloglogspu():
+    return redirect("/static/pusgrade.xlsx")
+
+@app.route("/donlodsinloglogsdl")
+def donlodsinloglogsdl():
+    return redirect("/static/delgrade.xlsx")
+
 @app.route('/logout', methods=['POST'])
 def logout():
     # 清除会话中的用户信息
