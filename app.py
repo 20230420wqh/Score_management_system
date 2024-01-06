@@ -13,6 +13,8 @@ import mysql.connector
 from datetime import datetime
 from flask_session import Session
 import datetime
+import pandas as pd
+import openpyxl
 #
 # mydb = mysql.connector.connect(
 #         host="localhost",
@@ -87,6 +89,7 @@ def mysqlif():
     return mydb
 
 app = Flask(__name__)
+UPLOAD_PATH = os.path.join(os.path.dirname(__file__))
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 app.secret_key = 'wqh@123#$ddaa&%'  # 替换为安全的密钥
@@ -689,6 +692,34 @@ def donlodsinloglogspu():
 @app.route("/donlodsinloglogsdl")
 def donlodsinloglogsdl():
     return redirect("/static/delgrade.xlsx")
+
+@app.route('/indatedel', methods=['POST'])   
+def upload_file():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file:
+            # 读取 Excel 文件
+            df = pd.read_excel(file,  skiprows=2) #header=None,
+            # 创建 mysql 连接
+            conn = mysql.connector.connect(
+            host="47.115.200.81",
+            user="root",
+            password="wqh@2023",
+            database="Score_management_system__teacher",
+            port = 3306,
+            charset='utf8mb4'   # 指定字符集
+                                    )
+            cursor = conn.cursor()
+            # 将数据插入数据库
+            for i, row in df.iterrows():
+                update = "insert into delet ( username, name, why, week, datetime, out_why, delgrade) values ( %s, %s, %s, %s, %s, %s, %s)"
+                cursor.execute(update,tuple(row))
+                conn.commit()
+            
+            cursor.close()
+            conn.close()
+    return redirect("/newidofdel")
+
 
 @app.route('/logout', methods=['POST'])
 def logout():

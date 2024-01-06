@@ -224,23 +224,9 @@
     </div>
 </body>
 <script>
-    // const userValue = "{{username}}"; // 这里替换为您实际的用户值
-    //         // 函数用于显示消息
-    //         function mess(content) {
-    //         var messageContainer = document.getElementById("messageContainer");
-    //         messageContainer.innerText = content;
-    
-    //         // 显示消息
-    //         messageContainer.style.display = "block";
-    
-    //         // 在3秒后隐藏消息
-    //         setTimeout(function () {
-    //             messageContainer.style.display = "none";
-    //         }, 3000); // 3秒
-    //     }
     const userValue = "{{username}}"; // 替换为实际的用户名值
 
-    if (userValue !== "Administrator" && userValue !== "amy_ad" && userValue !== "wqh_ad") {
+    if (userValue !== "Administrator" && userValue !== "amy_ad" && userValue !== "wqh_ad" && userValue !== "test_1ad" && userValue !== "Test_1ad") {
         alert("你没有权限查看");
         window.location.href = "/home";
 
