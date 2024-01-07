@@ -205,3 +205,7 @@ a {
           text-align: center;
           margin: 0 auto; /* 通过设置左右外边距为auto来使元素水平居中 */
           }
+          .table-container {
+            overflow: auto;
+            max-height: 2000px; /* 根据需要调整最大高度 */
+        }

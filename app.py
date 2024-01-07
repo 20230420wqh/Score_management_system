@@ -94,6 +94,39 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 app.secret_key = 'wqh@123#$ddaa&%'  # 替换为安全的密钥
 
+# 插入日志信息函数定义
+def cinmysqllog(username,information):
+        conn = mysql.connector.connect(
+        host="47.115.200.81",
+        user="root",
+        password="wqh@2023",
+        database="Score_management_system__teacher",
+        port = 3306,
+        charset='utf8mb4'   # 指定字符集
+            )
+        current_datetime  = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        user_ip = request.remote_addr
+        cursor = conn.cursor()
+        insert_query = ("insert into applog_infor (username,information,user_ip,datetime) values (%s,%s,%s,%s)")
+        par2 = (username,information,user_ip,current_datetime)
+        cursor.execute(insert_query, par2)
+        conn.commit()
+        conn.close()
+        mydb.close()
+        mydb._open_connection()  # 打开数据库连接
+        cursor = mydb.cursor()  # 获取游标
+
+        # 执行重新排序的SQL语句
+        cursor.execute('SET @new_id := 0')
+        update_query = 'UPDATE applog_infor SET id = @new_id := @new_id + 1 ORDER BY id'
+        cursor.execute(update_query)
+        # 提交重新排序事务
+        mydb.commit()
+        mydb.close()  # 所有语句执行完成后再关闭数据库连接
+        return 0
+
+
+
 def get_next_id_of_detet():
     conn = mysql.connector.connect(
         host="47.115.200.81",
@@ -235,6 +268,8 @@ def login_post():
         #logging.info("登录成功")
         print("登录成功")
         session['username'] = username  # 将用户名存储在会话中
+        what = "登录成功"
+        cinmysqllog(username,what)
         return redirect('/home')
 
     else:
@@ -255,16 +290,18 @@ def login_required(view_func):
 @login_required
 def home():
     username = session.get('username')
+    what = "访问/home界面(访问首页)"
+    cinmysqllog(username,what)
     return render_template('homepage.html',username = username)
 
 @app.route('/downloadwhat', endpoint='downloadwhat')
+@login_required
 @check_condition
 def download():
     print("有用户下载")
     return redirect("/static/aboutapp.docx")
 
 @app.route('/goabout', methods=['POST'])
-
 def index2():
     return redirect('/about')
 
@@ -272,6 +309,9 @@ def index2():
 @check_condition
 @login_required
 def index3():
+    what = "访问/about(关于wqh页面)"
+    username = session.get('username')
+    cinmysqllog(username,what)
     return app.send_static_file('aboutwqh.html')
 
 @app.route('/gohome', methods=['POST'])
@@ -317,6 +357,9 @@ def index6():
     users = cursor.fetchall()
     mydb.close()
     username = session.get('username')
+    what = "访问/add界面(量化分查看)"
+    username = session.get('username')
+    cinmysqllog(username,what)
     return render_template('grade_add.html', users=users,username = username)
     #app.send_static_file这个是旧的路径
 @app.route('/userpush', endpoint='userpush')
@@ -341,6 +384,9 @@ def userpush():
     #     print("连接成功（重新连接）")
     # else:
     #     print("连接成功")
+    what = "访问/userpush(用户信息页面)"
+    username = session.get('username')
+    cinmysqllog(username,what)
     username = session.get('username')
     mydb._open_connection()
     cursor.execute("SELECT * FROM user")
@@ -349,29 +395,10 @@ def userpush():
     return render_template('userpush.html', users=users,username = username)
 
 @app.route('/delete/<int:user_id>', methods=['GET', 'POST'])
-
 def delete_user(user_id):
     if user_id == 1 or user_id == 2 or user_id ==3:
         redirect('/userpush')
     else:
-        # mydb._open_connection()
-        # # 执行删除用户的SQL语句
-        # delete_query = 'DELETE FROM user WHERE id = %s'
-        # cursor.nextset()
-        # cursor.execute(delete_query, (user_id,))
-        # # 提交事务
-        # mydb.commit()
-        # mydb.close()
-        # mydb._open_connection()
-        # # 执行重新排序的SQL语句
-        # reorder_query = 'SET @new_id := 0; UPDATE user SET id = @new_id := @new_id + 1 ORDER BY id;'
-        # cursor.nextset()
-        # cursor.execute(reorder_query)
-
-        # # 提交重新排序事务
-        # mydb.commit()
-        # mydb.close()
-        # 执行删除用户的SQL语句
         mydb._open_connection()  # 打开数据库连接
         cursor = mydb.cursor()  # 获取游标
 
@@ -389,7 +416,9 @@ def delete_user(user_id):
         mydb.commit()
 
         mydb.close()  # 所有语句执行完成后再关闭数据库连接
-
+        what = f"删除用户,id为",user_id
+        username = session.get('username')
+        cinmysqllog(username,what)
     return redirect('/userpush')
 
 @app.route('/newid', methods=['GET', 'POST'])
@@ -405,8 +434,10 @@ def newid():
         cursor.execute(update_query)
         # 提交重新排序事务
         mydb.commit()
-
         mydb.close()  # 所有语句执行完成后再关闭数据库连接
+        what = "刷新用户id"
+        username = session.get('username')
+        cinmysqllog(username,what)
         return redirect('/userpush')
 
 @app.route('/newlist', methods=['GET', 'POST'])
@@ -419,7 +450,9 @@ def newlist():
 @check_condition
 @login_required
 def applog():
+    what = "访问/applog界面(程序更新日志)"
     username = session.get('username')
+    cinmysqllog(username,what)
     return render_template('applog.html',username = username)
     
 @app.route('/detelgrade',endpoint='detelgrade')
@@ -455,6 +488,9 @@ def detegrade():
     pupils = cursor.fetchall()
     mydb.close()
     username = session.get('username')
+    what = "访问/detelgrade界面(新建扣分界面)"
+    username = session.get('username')
+    cinmysqllog(username,what)
     return render_template('delgrade.html',pupils = pupils,username=username)
 
 @app.route('/delgradepupil', methods=['POST'])
@@ -537,6 +573,9 @@ def pushpupildel():
     mydb.commit()  # 不要忘记提交事务来保存更改
 
     mydb.close() 
+    what = "新建扣分"
+    username = session.get('username')
+    cinmysqllog(username,what)
     # redirect('/detelgrade')
     return redirect('/newidofdel')
 # @app.route('/newid')
@@ -574,6 +613,9 @@ def dellog():
     mydb.close()
     username = session.get('username')
     print(dellog)
+    what = "访问/dellog(扣分记录)"
+    username = session.get('username')
+    cinmysqllog(username,what)
     return render_template('dellog.html', dellogs=dellog,username = username)
 
 @app.route('/dellogd/<int:dellog_id>', methods=['GET', 'POST'])
@@ -619,7 +661,9 @@ def delete_delet(dellog_id):
         mydb.commit()
 
         mydb.close()  # 所有语句执行完成后再关闭数据库连接
-
+        what = "删除扣分记录"
+        username = session.get('username')
+        cinmysqllog(username,what)
         return redirect('/dellog')
 
 @app.route('/newdel', methods=['GET', 'POST'])
@@ -660,6 +704,9 @@ def newdelid():
             mydb.close()  # 所有语句执行完成后再关闭数据库连接
         else:
             print("无法更新")
+        what = "更新扣分记录id"
+        username = session.get('username')
+        cinmysqllog(username,what)
         return redirect('/dellog')
 
 @app.route('/pulldate',endpoint='pulldate')
@@ -667,6 +714,9 @@ def newdelid():
 @login_required
 def pulldate():
     username = session.get('username')
+    what = "访问/pulldate(导入与导出)"
+    username = session.get('username')
+    cinmysqllog(username,what)
     return render_template('downdate.html',username=username)
 
 @app.route('/ipcondition',endpoint='ipcondition')
@@ -683,14 +733,23 @@ def ipcondition():
     whiteip = cursor.fetchall()
     mydb.close()
     client_ip = request.remote_addr
+    what = "访问/ipcondition(ip限制)"
+    username = session.get('username')
+    cinmysqllog(username,what)
     return render_template('ipcondition.html',username=username,blackips=blackip,whiteips=whiteip,client_ip=client_ip)
 
 @app.route("/donlodsinloglogspu")
 def donlodsinloglogspu():
+    what = "加分模板下载"
+    username = session.get('username')
+    cinmysqllog(username,what)
     return redirect("/static/pusgrade.xlsx")
 
 @app.route("/donlodsinloglogsdl")
 def donlodsinloglogsdl():
+    what = "扣分模板下载"
+    username = session.get('username')
+    cinmysqllog(username,what)
     return redirect("/static/delgrade.xlsx")
 
 @app.route('/indatedel', methods=['POST'])   
@@ -712,17 +771,40 @@ def upload_file():
             cursor = conn.cursor()
             # 将数据插入数据库
             for i, row in df.iterrows():
-                update = "insert into delet ( username, name, why, week, datetime, out_why, delgrade) values ( %s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(update,tuple(row))
-                conn.commit()
-            
-            cursor.close()
-            conn.close()
+                print(tuple(row)[1])
+                mydb._open_connection()
+                mycursor = mydb.cursor()
+                sql = "SELECT * FROM pupil WHERE who = %s"
+                mycursor.execute(sql, (tuple(row)[1],))
+                pupil = mycursor.fetchone()
+                if pupil:
+                    update = "insert into delet ( username, name, why, week, datetime, out_why, delgrade) values ( %s, %s, %s, %s, %s, %s, %s)"
+                    cursor.execute(update,tuple(row))
+                    conn.commit()
+                            # 更新指定用户名的分数
+                    update_query = """
+                    UPDATE pupil
+                    SET grade = grade - %s
+                    WHERE who = %s
+                    """
+
+                    cursor.execute(update_query, (tuple(row)[6], tuple(row)[1]))
+                    conn.commit()  # 不要忘记提交事务来保存更改
+                    cursor.close()
+                    conn.close()
+                    mydb.close() 
+                    what = "导入扣分记录"
+                    username = session.get('username')
+                    cinmysqllog(username,what)
+                else:
+                    return "对不起，请检查你的文件，文件中有的被登记者找不到"
     return redirect("/newidofdel")
-
-
+                
 @app.route('/logout', methods=['POST'])
 def logout():
+    what = "注销"
+    username = session.get('username')
+    cinmysqllog(username,what)
     # 清除会话中的用户信息
     session.pop('username', None)
     # 重定向到登录页面
